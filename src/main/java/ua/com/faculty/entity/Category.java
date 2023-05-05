@@ -17,6 +17,8 @@ public class Category {
     private String name;
     private String description;
 
+    private String image;
+
     @OneToMany(mappedBy = "categories")
     private List<Faculty> routesList;
 }

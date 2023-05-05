@@ -8,40 +8,40 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ua.com.bus_cash.bl.Cart;
-import ua.com.bus_cash.bl.ItemCart;
-import ua.com.bus_cash.entity.Client;
-import ua.com.bus_cash.entity.Order;
-import ua.com.bus_cash.entity.OrderHasRoutes;
-import ua.com.bus_cash.entity.Users;
-import ua.com.bus_cash.repository.ClientRepository;
-import ua.com.bus_cash.repository.OrderHasRoutesRepository;
-import ua.com.bus_cash.repository.OrderRepository;
-import ua.com.bus_cash.repository.UsersRepository;
-import ua.com.bus_cash.service.ClientService;
-import ua.com.bus_cash.service.UsersService;
+import ua.com.faculty.bl.Cart;
+import ua.com.faculty.bl.ItemCart;
+import ua.com.faculty.entity.Rate;
+import ua.com.faculty.entity.RateHasFaculty;
+import ua.com.faculty.entity.Student;
+import ua.com.faculty.entity.User;
+import ua.com.faculty.repository.RateHasFacultyRepository;
+import ua.com.faculty.repository.RateRepository;
+import ua.com.faculty.repository.StudentRepository;
+import ua.com.faculty.repository.UserRepository;
+import ua.com.faculty.service.StudentService;
+import ua.com.faculty.service.UsersService;
 
 import java.util.Date;
 
 @Controller
 public class UserController {
-    private final UsersRepository usersRepository;
+    private final UserRepository usersRepository;
     private final UsersService usersService;
-    private final ClientService clientService;
-    private final ClientRepository clientRepository;
-    private final OrderRepository orderRepository;
-    private final OrderHasRoutesRepository orderHasRoutesRepository;
-
+    private final StudentService studentService;
+    private final StudentRepository studentRepository;
+    private final RateRepository rateRepository;
+    private final RateHasFacultyRepository rateHasFacultyRepository;
 
     @Autowired
-    public UserController(UsersRepository usersRepository, UsersService usersService, ClientService clientService, ClientRepository clientRepository, OrderRepository orderRepository, OrderHasRoutesRepository orderHasRoutesRepository) {
+    public UserController(UserRepository usersRepository, UsersService usersService, StudentService studentService, StudentRepository studentRepository, RateRepository rateRepository, RateHasFacultyRepository rateHasFacultyRepository) {
         this.usersRepository = usersRepository;
         this.usersService = usersService;
-        this.clientService = clientService;
-        this.clientRepository = clientRepository;
-        this.orderRepository = orderRepository;
-        this.orderHasRoutesRepository = orderHasRoutesRepository;
+        this.studentService = studentService;
+        this.studentRepository = studentRepository;
+        this.rateRepository = rateRepository;
+        this.rateHasFacultyRepository = rateHasFacultyRepository;
     }
+
 
     @PostMapping("/login")
     public String getPageOrder(@RequestParam(name = "username") String users,
@@ -50,7 +50,7 @@ public class UserController {
 
         if(usersService.getLogicByUsernameAndPassword(users, password)){
 
-            Users users1 = usersService.getUserByUsernameAndPassword(users, password);
+            User users1 = usersService.getUserByUsernameAndPassword(users, password);
             HttpSession session = request.getSession();
 
             session.setAttribute("user", users1);
@@ -79,20 +79,20 @@ public class UserController {
 
         HttpSession session = request.getSession();
 
-        Users user = new Users();
+        User user = new User();
         user.setUsername(username);
         user.setPassword(password);
 
         usersRepository.save(user);
 
-        Client client = new Client();
-        client.setName(name);
-        client.setSurname(surname);
-        client.setPhone(phone);
-        client.setEmail(email);
-        client.setUser(user);
+        Student student = new Student();
+        student.setName(name);
+        student.setSurname(surname);
+        student.setPhone(phone);
+        student.setEmail(email);
+        student.setUser(user);
 
-        clientRepository.save(client);
+        studentRepository.save(student);
 
         return "login";
     }
@@ -104,7 +104,7 @@ public class UserController {
         HttpSession session = request.getSession();
 
         Cart cart = (Cart) session.getAttribute("cart");
-        Users user = (Users) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
         if(user == null) {
             return "redirect:/";
@@ -113,43 +113,34 @@ public class UserController {
         if (cart==null) return "redirect:/";
 
         model.addAttribute("itemCart", cart.getCart());
-        model.addAttribute("totalValue", cart.getTotalVal());
 
 
-        Client client = clientService.getClientByUser(user);
+        Student student = studentService.getStudentByUser(user);
 
-        model.addAttribute("client", client);
+        model.addAttribute("student", student);
 
         return "order";
     }
 
     @PostMapping("/order")
-    public String saveOrderToDB(@RequestParam(name = "payment") String payment,
-                                HttpServletRequest request ){
+    public String saveOrderToDB(HttpServletRequest request ){
 
         HttpSession session = request.getSession();
 
         Cart cart  = (Cart) session.getAttribute("cart");
-        Users user = (Users) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
-        Client client = clientService.getClientByUser(user);
+        Student student = studentService.getStudentByUser(user);
 
 
-        Order order = new Order();
-        order.setData_create(new Date());
-        order.setClient(client);
-        order.setPayment(payment);
-        order.setStatus(false);
+        Rate rate = new Rate();
+        rate.setGrate(0);
+        rate.setStudent(student);
 
-        Order order1 = orderRepository.save(order);
-
-        // save
-        // Order + Id
-        // Cart -> List<ItemCart>
-        // foreach
+        Rate rate1 = rateRepository.save(rate);
 
         for (ItemCart el : cart.getCart()) {
-            orderHasRoutesRepository.save(new OrderHasRoutes(el.getRoutes(), order1));
+            rateHasFacultyRepository.save(new RateHasFaculty(el.getFaculty(), rate1));
         }
 
         return "thank";
