@@ -1,46 +1,42 @@
-<#import "templ/templ.ftl" as c>
-<@c.pages>
-        <div class="row justify-content-center">
-            <div class="col-5"></div>
+<#import "/spring.ftl" as spring>
+<#import "templ/templ.ftl" as p>
+
+<@p.pages>
+    <h1> Registration </h1>
+
+    <form action="/registration" method="post">
+
+        <@spring.bind "users"/>
+
+        <label>Username</label><br>
+        <@spring.formInput "users.username"/>
+        <@spring.showErrors "<br>"/><br>
+
+        <label>Password</label><br>
+        <@spring.formInput "users.password"/>
+        <@spring.showErrors "<br>"/><br>
+
+        <@spring.bind "customer"/>
+
+        <label>First Name</label><br>
+        <@spring.formInput "customer.name"/>
+        <@spring.showErrors "<br>"/><br>
+
+        <label>Last Name</label><br>
+        <@spring.formInput "customer.surname"/>
+        <@spring.showErrors "<br>"/><br>
+
+        <label>Phone</label><br>
+        <@spring.formInput "customer.phone"/>
+        <@spring.showErrors "<br>"/><br>
+
+        <label>Email</label><br>
+        <@spring.formInput "customer.email"/>
+        <@spring.showErrors "<br>"/><br>
 
 
-            <h2> Registration User </h2>
-            <form action="/registration" method="post">
-                <div class="mb-3">
+        <input type="submit" value="save">
 
-                    <fieldset>
-                        <label for="username">Username</label>
-                        <input type="text" name="username" id="username" placeholder="user">
+    </form>
 
-                        <p></p>
-
-                        <label for="name">Surname</label>
-                        <input type="text" name="name" id="name" placeholder="enter u`r name">
-
-                        <p></p>
-
-                        <label for="surname">Surname</label>
-                        <input type="text" name="surname" id="surname" placeholder="surname">
-
-                        <p></p>
-
-                        <label for="phone">Phone</label>
-                        <input type="text" name="phone" id="phone" placeholder="phone">
-
-                        <p></p>
-
-                        <label for="email">Email</label>
-                        <input type="text" name="email" id="email" placeholder="email">
-
-                        <p></p>
-
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" placeholder="pass">
-                    </fieldset>
-                </div>
-
-                <button type="submit"> add</button>
-            </form>
-        </div>
-
-</@c.pages>
+</@p.pages>

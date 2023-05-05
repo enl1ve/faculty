@@ -37,7 +37,7 @@
 
   <p></p>
   <h2>go to Form Order</h2>
-  <form action="/login" method="get">
+  <form action="/order" method="get">
     <button type="submit"> go to Auth </button>
   </form>
 

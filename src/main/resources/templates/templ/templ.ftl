@@ -16,6 +16,9 @@
         </div>
 
         <div class="row">
+            <div class="col-2">
+                <#include "left.ftl">
+            </div>
             <div class="col-12 col-md-9">
                 <#nested>
             </div>

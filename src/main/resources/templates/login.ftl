@@ -1,26 +1,15 @@
-<#import "templ/templ.ftl" as c>
-<@c.pages>
+<#import "templ/templ.ftl" as p>
+<@p.pages>
+    <h1>Login</h1>
+    <form action="/login" method="post">
+        <label for="username">Username</label><br>
+        <input type="text" name="username" placeholder="username" id="username"><br><br>
+        <label for="password">Pass</label><br>
+        <input type="text" name="password" placeholder="password" id="password"><br>
 
-    <div class="row justify-content-center">
-        <div class="col-5"></div>
+        <input type="submit" value="add">
+        <#--        <button type="submit">add</button>-->
+    </form>
+    <a href="/registration">Перехід на сторінку реєстрації</a>
 
-
-        <h2> Auth User </h2>
-        <form action="/login" method="post">
-            <div class="mb-3">
-
-                <fieldset>
-                    <label for="username">Username</label>
-                    <input type="text" name="username" id="username" placeholder="user">
-
-                    <p></p>
-
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="pass">
-                </fieldset>
-            </div>
-
-            <button type="submit"> add</button>
-        </form>
-    </div>
-</@c.pages>
+</@p.pages>

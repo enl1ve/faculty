@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface FacultyRepository extends JpaRepository<Faculty, Long> {
     List<Faculty> findAllByCategories(Category category);
+
+    Faculty findByName(String name);
 }

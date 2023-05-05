@@ -9,4 +9,5 @@ import java.util.List;
 
 @Repository
 public interface RateRepository extends JpaRepository<Rate, Long> {
+    List<Rate> findByGrate(int grade);
 }
